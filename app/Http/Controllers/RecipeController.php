@@ -19,17 +19,26 @@ class RecipeController extends Controller
             'description' => 'required|min:5',
             'title' => 'required|max:255',
             'img_id' => 'required',
+            'steps' => 'required|array',
         ]);
         $user = auth()->user();
         $title = $request->title;
         $img_id = $request->img_id;
         $description = $request->description;
-        $steps = $request->$user->recipes()->create([
+
+        $stepsRequest = $request->steps;
+        $steps = $user->recipes()->steps();
+
+        $user->recipes()->create([
             'title' => $title,
             'img_id' => $img_id,
             'description' => $description,
         ]);
-
+        foreach ($stepsRequest as $step) {
+            $steps->create([
+                'description' => $step,
+            ]);
+        }
         return response()->json(["message" => "success"], 201);
     }
 
