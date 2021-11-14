@@ -11,5 +11,9 @@ class Recipe extends Model
         'img_id',
         'description',
     ];
-    protected $attributes = ['views'];
+    protected $attributes = ['views' => 0];
+    public function recipes()
+    {
+        return $this->hasMany(Step::class);
+    }
 }
