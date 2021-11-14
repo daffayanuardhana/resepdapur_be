@@ -30,6 +30,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('/logout', 'AuthController@logout');
         $router->get('/me', 'AuthController@me');
-        $router->get('/recipe', 'RecipeController@getAllRecipe');
+
+        $router->group(['prefix' => 'recipe'], function () use ($router) {
+            $router->post('/', 'RecipeController@createRecipe');
+            $router->get('/', 'RecipeController@getAllRecipe');
+        });
     });
 });

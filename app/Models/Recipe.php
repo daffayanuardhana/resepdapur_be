@@ -8,9 +8,8 @@ class Recipe extends Model
 {
     protected $fillable = [
         'title',
-        'title',
         'img_id',
-        'views',
         'description',
     ];
+    protected $attributes = ['views'];
 }
