@@ -11,15 +11,22 @@ class AuthController extends Controller
 {
 
     /**
-     * Get a JWT via given credentials.
+     * Create Users and Get a JWT via given credentials.
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function register(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|min:5|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:5',
+        ]);
         $name = $request->name;
         $email = $request->email;
         $password = $request->password;
+
         try {
             $user = new User();
             $user->name = $name;
@@ -34,15 +41,21 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+
     public function login(Request $request)
     {
+        $this->validate($request, [
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:5',
+        ]);
         $email = $request->email;
         $password = $request->password;
 
-        // Check if field is empty
-        if (empty($email) or empty($password)) {
-            return response()->json(['status' => 'error', 'message' => 'You must fill all the fields']);
-        }
 
         $credentials = request(['email', 'password']);
 
