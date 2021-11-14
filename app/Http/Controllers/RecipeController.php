@@ -14,10 +14,13 @@ class RecipeController extends Controller
      */
     public function getAllRecipe(Request $request)
     {
-        // $itemPerPage =
-        $length = $request->length;
-        $recipes = Recipe::take(10)
+        $itemPerPage = 9;
+        $pageNumber = $request->pageNumber;
+        $startAt = $itemPerPage * ($pageNumber - 1);
+        $recipes = Recipe::take($itemPerPage)
             ->orderBy('views')
+            ->take($itemPerPage)
+            ->skip($startAt)
             ->get();
         return $recipes;
     }
