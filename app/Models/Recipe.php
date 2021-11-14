@@ -12,7 +12,7 @@ class Recipe extends Model
         'description',
     ];
     protected $attributes = ['views' => 0];
-    public function recipes()
+    public function steps()
     {
         return $this->hasMany(Step::class);
     }
