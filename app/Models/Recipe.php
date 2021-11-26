@@ -12,6 +12,12 @@ class Recipe extends Model
         'description',
     ];
     protected $attributes = ['views' => 0];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function steps()
     {
         return $this->hasMany(Step::class);

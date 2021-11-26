@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Recipe;
+use App\Models\Step;
+use App\Models\User;
 
 class RecipeController extends Controller
 {
@@ -27,18 +29,26 @@ class RecipeController extends Controller
         $description = $request->description;
 
         $stepsRequest = $request->steps;
-        // $steps = $user->recipes()->steps();
+        $recipes = $user->recipes();
 
-        $user->recipes()->create([
+        $recipesModel = $recipes->create([
             'title' => $title,
             'img_id' => $img_id,
             'description' => $description,
         ]);
-        // foreach ($stepsRequest as $step) {
-        //     $steps->create([
-        //         'description' => $step,
-        //     ]);
-        // }
+
+
+        $steps = $recipesModel->steps();
+        $number = 1;
+        foreach ($stepsRequest as $step) {
+            $steps->create([
+                'description' => $step,
+                'number' => $number
+            ]);
+            $number++;
+        }
+
+
         return response()->json(["message" => "success"], 201);
     }
 
@@ -56,7 +66,7 @@ class RecipeController extends Controller
             ->orderBy('views')
             ->skip($startAt)
             ->get();
-        $totalPage = Recipe::count() / 9;
+        $totalPage = ceil(Recipe::count() / 9);
         return response()->json(["recipes" => $recipes, "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]]);
     }
 }
