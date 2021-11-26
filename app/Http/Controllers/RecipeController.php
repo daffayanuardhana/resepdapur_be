@@ -27,17 +27,14 @@ class RecipeController extends Controller
         $title = $request->title;
         $img_id = $request->img_id;
         $description = $request->description;
-
         $stepsRequest = $request->steps;
-        $recipes = $user->recipes();
 
+        $recipes = $user->recipes();
         $recipesModel = $recipes->create([
             'title' => $title,
             'img_id' => $img_id,
             'description' => $description,
         ]);
-
-
         $steps = $recipesModel->steps();
         $number = 1;
         foreach ($stepsRequest as $step) {
@@ -47,8 +44,6 @@ class RecipeController extends Controller
             ]);
             $number++;
         }
-
-
         return response()->json(["message" => "success"], 201);
     }
 
