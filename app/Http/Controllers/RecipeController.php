@@ -69,4 +69,20 @@ class RecipeController extends Controller
         $totalPage = ceil(Recipe::count() / 9);
         return response()->json(["recipes" => $recipes, "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]]);
     }
+
+    /**
+     * Get The Recipe By id.
+     *
+     * @return JSON
+     */
+    public function getRecipeById(Request $request)
+    {
+        $id = $request->id;
+        $recipe = Recipe::where('id',$id)->first();
+        $steps = $recipe
+            ->steps()
+            ->orderBy('number')
+            ->get();
+        return response()->json(["recipe" => $recipe, "steps" => $steps]);
+    }
 }
