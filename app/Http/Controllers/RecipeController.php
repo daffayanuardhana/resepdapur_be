@@ -27,18 +27,18 @@ class RecipeController extends Controller
         $description = $request->description;
 
         $stepsRequest = $request->steps;
-        $steps = $user->recipes()->steps();
+        // $steps = $user->recipes()->steps();
 
         $user->recipes()->create([
             'title' => $title,
             'img_id' => $img_id,
             'description' => $description,
         ]);
-        foreach ($stepsRequest as $step) {
-            $steps->create([
-                'description' => $step,
-            ]);
-        }
+        // foreach ($stepsRequest as $step) {
+        //     $steps->create([
+        //         'description' => $step,
+        //     ]);
+        // }
         return response()->json(["message" => "success"], 201);
     }
 
@@ -50,12 +50,13 @@ class RecipeController extends Controller
     public function getAllRecipe(Request $request)
     {
         $itemPerPage = 9;
-        $pageNumber = $request->pageNumber;
-        $startAt = $itemPerPage * ($pageNumber - 1);
+        $page = $request->get('page');
+        $startAt = $itemPerPage * ($page - 1);
         $recipes = Recipe::take($itemPerPage)
             ->orderBy('views')
             ->skip($startAt)
             ->get();
-        return $recipes;
+        $totalPage = Recipe::count() / 9;
+        return response()->json(["recipes" => $recipes, "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]]);
     }
 }
