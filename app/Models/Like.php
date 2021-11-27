@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Like extends Model
 {
-    public function users()
+    use SoftDeletes;
+
+    public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
-    public function recipes()
+
+    public function recipe()
     {
-        return $this->hasMany(Recipe::class);
+        return $this->belongsTo(Recipe::class);
     }
 }

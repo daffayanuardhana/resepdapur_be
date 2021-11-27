@@ -127,7 +127,7 @@ class RecipeController extends Controller
             if (!$recipe) {
                 return response()->json(["message" => "not found"], 404);
             }
-            $recipesModel = $recipes->update([
+            $recipes->update([
                 'title' => $title,
                 'img_id' => $img_id,
                 'description' => $description,
@@ -160,6 +160,9 @@ class RecipeController extends Controller
 
         try {
             $recipe = $recipes->where('id', $id)->first();
+            if(!$recipe){
+                return response()->json(["message" => "id not found"], 404);
+            }
             $recipe->delete();
         } catch (\Exception $e) {
             return response()->json(["message" => "database error", "error" => "$e"], 500);

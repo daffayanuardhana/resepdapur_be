@@ -22,4 +22,9 @@ class Recipe extends Model
     {
         return $this->hasMany(Step::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }
