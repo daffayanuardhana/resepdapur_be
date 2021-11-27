@@ -36,11 +36,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('/logout', 'AuthController@logout');
         $router->get('/me', 'AuthController@me');
+        $router->get('/like', 'RecipeLikeController@getLikeRecipes');
         $router->group(['prefix' => 'recipe'], function () use ($router) {
             $router->post('/', 'RecipeController@createRecipe');
             $router->patch('/{id}', 'RecipeController@changeMyRecipe');
             $router->delete('/{id}', 'RecipeController@deleteMyRecipe');
-            // $router->get('/like', 'RecipeLikeController@getLikeRecipes');
             $router->post('/{id}/like', 'RecipeLikeController@likeRecipe');
             $router->delete('/{id}/like', 'RecipeLikeController@unlikeRecipe');
         });
