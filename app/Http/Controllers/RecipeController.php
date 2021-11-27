@@ -30,19 +30,23 @@ class RecipeController extends Controller
         $stepsRequest = $request->steps;
 
         $recipes = $user->recipes();
-        $recipesModel = $recipes->create([
-            'title' => $title,
-            'img_id' => $img_id,
-            'description' => $description,
-        ]);
-        $steps = $recipesModel->steps();
-        $number = 1;
-        foreach ($stepsRequest as $step) {
-            $steps->create([
-                'description' => $step,
-                'number' => $number
+        try {
+            $recipesModel = $recipes->create([
+                'title' => $title,
+                'img_id' => $img_id,
+                'description' => $description,
             ]);
-            $number++;
+            $steps = $recipesModel->steps();
+            $number = 1;
+            foreach ($stepsRequest as $step) {
+                $steps->create([
+                    'description' => $step,
+                    'number' => $number
+                ]);
+                $number++;
+            }
+        } catch (\Exception $e) {
+            return response()->json(["message" => "database error", "error" => "$e"], 500);
         }
         return response()->json(["message" => "success"], 201);
     }
@@ -57,12 +61,20 @@ class RecipeController extends Controller
         $itemPerPage = 9;
         $page = $request->get('page');
         $startAt = $itemPerPage * ($page - 1);
-        $recipes = Recipe::take($itemPerPage)
-            ->orderBy('views')
-            ->skip($startAt)
-            ->get();
-        $totalPage = ceil(Recipe::count() / 9);
-        return response()->json(["recipes" => $recipes, "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]]);
+        try {
+            $recipes = Recipe::take($itemPerPage)
+                ->orderBy('views')
+                ->skip($startAt)
+                ->get();
+            $totalPage = ceil(Recipe::count() / 9);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "database error", "error" => "$e"], 500);
+        }
+        return response()->json([
+            "recipes" => $recipes,
+            "pagination" => ["totalPage" => $totalPage, "currentPage" => $page],
+            200
+        ]);
     }
 
     /**
@@ -73,11 +85,18 @@ class RecipeController extends Controller
     public function getRecipeById(Request $request)
     {
         $id = $request->id;
-        $recipe = Recipe::where('id',$id)->first();
-        $steps = $recipe
-            ->steps()
-            ->orderBy('number')
-            ->get();
-        return response()->json(["recipe" => $recipe, "steps" => $steps]);
+        try {
+            $recipe = Recipe::where('id', $id)->first();
+            if (!$recipe) {
+                return response()->json(["message" => "not found"], 404);
+            }
+            $steps = $recipe
+                ->steps()
+                ->orderBy('number')
+                ->get();
+        } catch (\Exception $e) {
+            return response()->json(["message" => "database error", "error" => "$e"], 500);
+        }
+        return response()->json(["recipe" => $recipe, "steps" => $steps], 200);
     }
 }
