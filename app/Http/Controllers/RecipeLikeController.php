@@ -33,7 +33,6 @@ class RecipeLikeController extends Controller
      *
      * @return JSON
      */
-
     public function unlikeRecipe(Request $request)
     {
         $user = auth()->user();
@@ -52,6 +51,11 @@ class RecipeLikeController extends Controller
         return response()->json(["message" => "recipe isn't like"], 409);
     }
 
+    /**
+     * get user liked list of recipe
+     *
+     * @return JSON
+     */
     public function getLikeRecipes(Request $request)
     {
         $itemPerPage = 9;

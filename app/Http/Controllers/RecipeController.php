@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Step;
 use App\Models\User;
+use Prophecy\Doubler\Generator\ClassCreator;
 
 class RecipeController extends Controller
 {
@@ -89,6 +90,7 @@ class RecipeController extends Controller
             if (!$recipe) {
                 return response()->json(["message" => "not found"], 404);
             }
+            $creator = $recipe->user()->get()->first();
             $steps = $recipe
                 ->steps()
                 ->orderBy('number')
@@ -96,7 +98,24 @@ class RecipeController extends Controller
         } catch (\Exception $e) {
             return response()->json(["message" => "database error", "error" => "$e"], 500);
         }
-        return response()->json(["recipe" => $recipe, "steps" => $steps], 200);
+
+        if ($user = auth()->user()) {
+            $like = $recipe->likes();
+            $isLike = $like->get()->contains('user_id', $user->id);
+            $isCreator = $creator->id === $user->id;
+            return response()->json([
+                    "recipe" => $recipe,
+                    "steps" => $steps,
+                    "creator" => $creator,
+                    "liked" => $isLike,
+                    "isCreator" => $isCreator
+                ],200);
+        }
+        return response()->json([
+            "recipe" => $recipe,
+            "steps" => $steps,
+            "creator" => $creator
+        ], 200);
     }
 
 
@@ -137,7 +156,7 @@ class RecipeController extends Controller
             $number = 1;
             foreach ($stepsRequest as $desc) {
                 // $step = $steps->where('number', $number);
-                $steps->updateOrCreate(['number' => $number],['description' => $desc]);
+                $steps->updateOrCreate(['number' => $number], ['description' => $desc]);
                 $number++;
             }
         } catch (\Exception $e) {
@@ -160,7 +179,7 @@ class RecipeController extends Controller
 
         try {
             $recipe = $recipes->where('id', $id)->first();
-            if(!$recipe){
+            if (!$recipe) {
                 return response()->json(["message" => "id not found"], 404);
             }
             $recipe->delete();
