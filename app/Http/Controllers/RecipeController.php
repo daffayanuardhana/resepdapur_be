@@ -87,14 +87,20 @@ class RecipeController extends Controller
         $id = $request->id;
         try {
             $recipe = Recipe::where('id', $id)->first();
+            $recipe->views = $recipe->views+1;
+            $recipe->save();
+
             if (!$recipe) {
                 return response()->json(["message" => "not found"], 404);
             }
+
             $creator = $recipe->user()->get()->first();
             $steps = $recipe
                 ->steps()
                 ->orderBy('number')
                 ->get();
+
+            $totalLikes = $recipe->likes()->count();
         } catch (\Exception $e) {
             return response()->json(["message" => "database error", "error" => "$e"], 500);
         }
@@ -107,6 +113,7 @@ class RecipeController extends Controller
                     "recipe" => $recipe,
                     "steps" => $steps,
                     "creator" => $creator,
+                    "totalLikes"=>$totalLikes,
                     "liked" => $isLike,
                     "isCreator" => $isCreator
                 ],200);
@@ -114,7 +121,8 @@ class RecipeController extends Controller
         return response()->json([
             "recipe" => $recipe,
             "steps" => $steps,
-            "creator" => $creator
+            "creator" => $creator,
+            "totalLikes"=>$totalLikes
         ], 200);
     }
 
