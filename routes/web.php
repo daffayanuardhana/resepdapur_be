@@ -31,6 +31,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['prefix' => 'recipe'], function () use ($router) {
         $router->get('/', 'RecipeController@getAllRecipe');
         $router->get('/{id}', 'RecipeController@getRecipeById');
+        $router->patch('/{id}', 'RecipeController@changeMyRecipe');
     });
 
     $router->group(['middleware' => 'auth'], function () use ($router) {

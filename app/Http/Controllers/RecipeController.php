@@ -21,7 +21,7 @@ class RecipeController extends Controller
             'description' => 'required|min:5',
             'title' => 'required|max:255',
             'img_id' => 'required',
-            'steps' => 'required|array',
+            'steps' => 'required|array|min:1',
         ]);
         $user = auth()->user();
         $title = $request->title;
@@ -72,9 +72,8 @@ class RecipeController extends Controller
         }
         return response()->json([
             "recipes" => $recipes,
-            "pagination" => ["totalPage" => $totalPage, "currentPage" => $page],
-            200
-        ]);
+            "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]
+        ], 200);
     }
 
     /**
@@ -98,5 +97,52 @@ class RecipeController extends Controller
             return response()->json(["message" => "database error", "error" => "$e"], 500);
         }
         return response()->json(["recipe" => $recipe, "steps" => $steps], 200);
+    }
+
+
+    /**
+     * Update The Recipe By id.
+     *
+     * @return JSON
+     */
+    public function changeMyRecipe(Request $request)
+    {
+        $this->validate($request, [
+            'description' => 'required|min:5',
+            'title' => 'required|max:255',
+            'img_id' => 'required',
+            'steps' => 'required|array|min:1',
+        ]);
+        $id = $request->id;
+        $user = auth()->user();
+        $title = $request->title;
+        $img_id = $request->img_id;
+        $description = $request->description;
+        $stepsRequest = $request->steps;
+
+        $recipes = $user->recipes();
+
+        try {
+            $recipe = $recipes->where('id', $id)->first();
+            if (!$recipe) {
+                return response()->json(["message" => "not found"], 404);
+            }
+            $recipesModel = $recipes->update([
+                'title' => $title,
+                'img_id' => $img_id,
+                'description' => $description,
+            ]);
+            $steps = $recipe->steps();
+            $steps->delete();
+            $number = 1;
+            foreach ($stepsRequest as $desc) {
+                // $step = $steps->where('number', $number);
+                $steps->updateOrCreate(['number' => $number],['description' => $desc]);
+                $number++;
+            }
+        } catch (\Exception $e) {
+            return response()->json(["message" => "database error", "error" => "$e"], 500);
+        }
+        return response()->json(["message" => "success"], 201);
     }
 }
