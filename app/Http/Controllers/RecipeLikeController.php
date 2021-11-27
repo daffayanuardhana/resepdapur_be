@@ -29,6 +29,12 @@ class RecipeLikeController extends Controller
         return response()->json(["message" => "success"], 200);
     }
 
+    /**
+     * Unliking Recipe
+     *
+     * @return JSON
+     */
+
     public function unlikeRecipe(Request $request)
     {
         $user = auth()->user();
@@ -40,6 +46,13 @@ class RecipeLikeController extends Controller
             $liked->delete();
             return response()->json(["message" => "success"], 200);
         }
-        return response()->json(["message" => "post isn't like"], 409);
+        return response()->json(["message" => "recipe isn't like"], 409);
     }
+
+    // public function getLikeRecipes(Request $request){
+    //     $user = auth()->user();
+    //     $likes = $user->likes;
+    //     $likedRecipe = Like::first()->recipe();
+    //     return $likedRecipe;
+    // }
 }
