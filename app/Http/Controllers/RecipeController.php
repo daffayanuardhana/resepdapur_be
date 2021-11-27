@@ -145,4 +145,25 @@ class RecipeController extends Controller
         }
         return response()->json(["message" => "success"], 201);
     }
+
+    /**
+     * Delete The Recipe By id.
+     *
+     * @return JSON
+     */
+    public function deleteMyRecipe(Request $request)
+    {
+        $id = $request->id;
+        $user = auth()->user();
+
+        $recipes = $user->recipes();
+
+        try {
+            $recipe = $recipes->where('id', $id)->first();
+            $recipe->delete();
+        } catch (\Exception $e) {
+            return response()->json(["message" => "database error", "error" => "$e"], 500);
+        }
+        return response()->json(["message" => "success"], 205);
+    }
 }
