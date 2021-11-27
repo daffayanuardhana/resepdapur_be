@@ -69,7 +69,7 @@ class AuthController extends Controller
     /**
      * Get the authenticated User.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JSON
      */
     public function me()
     {
@@ -77,14 +77,38 @@ class AuthController extends Controller
     }
 
     /**
+     * Update user existing profile
+     *
+     * @return JSON
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = auth() -> user();
+
+        $this->validate($request, [
+            'email' => 'required|email',
+            'name' => 'required|min:5|max:255',
+            'password' => 'required|min:5',
+        ]);
+        
+        $name = $request->name;
+        $email = $request->email;
+        $password = $request->password;
+
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = app('hash')->make($password);
+        $user->save();
+        return $user;
+    }
+    /**
      * Log the user out (Invalidate the token).
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JSON
      */
     public function logout()
     {
         auth()->logout();
-
         return response()->json(['message' => 'Successfully logged out']);
     }
 
