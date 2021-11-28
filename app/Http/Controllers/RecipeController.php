@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Step;
 use App\Models\User;
-use Prophecy\Doubler\Generator\ClassCreator;
 
 class RecipeController extends Controller
 {
@@ -87,7 +86,7 @@ class RecipeController extends Controller
         $id = $request->id;
         try {
             $recipe = Recipe::where('id', $id)->first();
-            $recipe->views = $recipe->views+1;
+            $recipe->views = $recipe->views + 1;
             $recipe->save();
 
             if (!$recipe) {
@@ -110,19 +109,19 @@ class RecipeController extends Controller
             $isLike = $like->get()->contains('user_id', $user->id);
             $isCreator = $creator->id === $user->id;
             return response()->json([
-                    "recipe" => $recipe,
-                    "steps" => $steps,
-                    "creator" => $creator,
-                    "totalLikes"=>$totalLikes,
-                    "liked" => $isLike,
-                    "isCreator" => $isCreator
-                ],200);
+                "recipe" => $recipe,
+                "steps" => $steps,
+                "creator" => $creator,
+                "totalLikes" => $totalLikes,
+                "liked" => $isLike,
+                "isCreator" => $isCreator
+            ], 200);
         }
         return response()->json([
             "recipe" => $recipe,
             "steps" => $steps,
             "creator" => $creator,
-            "totalLikes"=>$totalLikes
+            "totalLikes" => $totalLikes
         ], 200);
     }
 
