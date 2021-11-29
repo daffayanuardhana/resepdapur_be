@@ -73,14 +73,15 @@ $app->configure('app');
 */
 
 $app->middleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
     App\Http\Middleware\CorsMiddleware::class 
 ]);
 
 // $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 // $app->middleware([
 //     App\Http\Middleware\CorsMiddleware::class

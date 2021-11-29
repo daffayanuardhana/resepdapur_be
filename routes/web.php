@@ -14,9 +14,6 @@ use App\Models\User;
 | and give it the Closure to call when that URI is requested.
 |
 */
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
 
 $router->group(['prefix' => 'test'], function () use ($router) {
     $router->get('/a', function () {
@@ -38,7 +35,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('/logout', 'AuthController@logout');
         $router->get('/me', 'AuthController@me');
         $router->get('/like', 'RecipeLikeController@getLikeRecipes');
-        $router->patch('/me', 'AuthController@updateProfile');
+        // $router->patch('/me', 'AuthController@updateProfile');
         $router->group(['prefix' => 'recipe'], function () use ($router) {
             $router->post('/', 'RecipeController@createRecipe');
             $router->patch('/{id}', 'RecipeController@changeMyRecipe');
