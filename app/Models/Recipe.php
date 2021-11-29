@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
@@ -12,6 +13,16 @@ class Recipe extends Model
         'description',
     ];
     protected $attributes = ['views' => 0];
+
+    public function getCreatedAtAttribute($value){
+        $created = new Carbon($value);
+        return $created->diffForHumans();
+    }
+
+    public function getUpdatedAtAttribute($value){
+        $created = new Carbon($value);
+        return $created->diffForHumans();
+    }
 
     public function user()
     {
