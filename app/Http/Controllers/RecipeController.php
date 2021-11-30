@@ -72,7 +72,7 @@ class RecipeController extends Controller
         }
         return response()->json([
             "recipes" => $recipes,
-            "pagination" => ["totalPage" => $totalPage, "currentPage" => $page]
+            "pagination" => ["totalPage" => $totalPage, "currentPage" => $page],
         ], 200);
     }
 

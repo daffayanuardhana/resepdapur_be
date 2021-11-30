@@ -13,6 +13,7 @@ class Recipe extends Model
         'description',
     ];
     protected $attributes = ['views' => 0];
+    protected $appends =["user"];
 
     public function getCreatedAtAttribute($value){
         $created = new Carbon($value);
@@ -22,6 +23,10 @@ class Recipe extends Model
     public function getUpdatedAtAttribute($value){
         $created = new Carbon($value);
         return $created->diffForHumans();
+    }
+
+    public function getUserAttribute(){
+        return $this->user()->first()->name;
     }
 
     public function user()
