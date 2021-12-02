@@ -88,7 +88,6 @@ class AuthController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'name' => 'required|min:5|max:255',
-            'password' => 'required|min:5',
         ]);
         
         $name = $request->name;
@@ -97,7 +96,8 @@ class AuthController extends Controller
 
         $user->name = $name;
         $user->email = $email;
-        $user->password = app('hash')->make($password);
+        if($password)
+            $user->password = app('hash')->make($password);
         $user->save();
         return $user;
     }
