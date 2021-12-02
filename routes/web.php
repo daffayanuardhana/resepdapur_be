@@ -35,7 +35,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('/logout', 'AuthController@logout');
         $router->get('/me', 'AuthController@me');
         $router->get('/like', 'RecipeLikeController@getLikeRecipes');
-        // $router->patch('/me', 'AuthController@updateProfile');
+        $router->patch('/me', 'AuthController@updateProfile');
         $router->group(['prefix' => 'recipe'], function () use ($router) {
             $router->post('/', 'RecipeController@createRecipe');
             $router->patch('/{id}', 'RecipeController@changeMyRecipe');
