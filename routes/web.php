@@ -40,7 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->post('/', 'RecipeController@createRecipe');
             $router->patch('/{id}', 'RecipeController@changeMyRecipe');
             $router->delete('/{id}', 'RecipeController@deleteMyRecipe');
-            $router->post('/{id}/like', 'RecipeLikeController@likeRecipe');
+            $router->get('/{id}/like', 'RecipeLikeController@likeRecipe');
             $router->delete('/{id}/like', 'RecipeLikeController@unlikeRecipe');
         });
     });

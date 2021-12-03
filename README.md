@@ -26,4 +26,4 @@ The Lumen framework is open-sourced software licensed under the [MIT license](ht
 ## Serving Your Application
 
 To serve your project locally, you may use the Laravel Homestead virtual machine, Laravel Valet, or the built-in PHP development server:
-`php -S localhost:8000 -t public`
+php -S localhost:8000 -t public
