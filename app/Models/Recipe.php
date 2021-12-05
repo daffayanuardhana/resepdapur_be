@@ -15,6 +15,11 @@ class Recipe extends Model
     protected $attributes = ['views' => 0];
     protected $appends =["user"];
 
+    public function getViewsAttribute($value){
+        $int = (int) $value;
+        return number_format($int);
+    }
+
     public function getCreatedAtAttribute($value){
         $created = new Carbon($value);
         return $created->diffForHumans();
