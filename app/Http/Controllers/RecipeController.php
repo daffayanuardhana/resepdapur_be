@@ -63,7 +63,7 @@ class RecipeController extends Controller
         $startAt = $itemPerPage * ($page - 1);
         try {
             $recipes = Recipe::take($itemPerPage)
-                ->orderBy('views')
+                ->orderBy('views','desc')
                 ->skip($startAt)
                 ->get();
             $totalPage = ceil(Recipe::count() / 9);
